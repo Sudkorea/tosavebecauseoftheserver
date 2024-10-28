@@ -1,0 +1,73 @@
+# 기본 설정
+seed: 42
+device: cuda  # cuda, cpu, mps
+model: null   # 필수 입력
+predict: false
+
+# 데이터 관련 설정
+dataset:
+  data_path: null  # 필수 입력
+  valid_ratio: 0.2
+  test_ratio: 0.1
+
+# 데이터 로더 설정
+dataloader:
+  batch_size: 128
+  num_workers: 4
+  shuffle: true
+  pin_memory: true
+
+# 모델 관련 설정
+model_args:
+  # 모델별 하이퍼파라미터 설정
+  model_name:
+    param1: value1
+    param2: value2
+
+# 학습 관련 설정
+train:
+  epochs: 100
+  early_stopping: 10
+  save_dir: "../models/"
+  resume: false
+  resume_path: null
+  gradient_clip: null
+  mixed_precision: false
+
+# 최적화 관련 설정
+optimizer:
+  type: Adam  # Adam, SGD, AdamW 등
+  args:
+    lr: 0.001
+    weight_decay: 0.0001
+
+# 학습률 스케줄러 설정
+lr_scheduler:
+  use: false
+  type: null  # ReduceLROnPlateau, CosineAnnealingLR 등
+  args:
+    mode: min
+    factor: 0.5
+    patience: 5
+    min_lr: 0.00001
+
+# 손실 함수
+loss: MSELoss  # MSELoss, BCELoss 등
+
+# 평가 지표
+metrics:
+  - rmse
+  - mae
+
+# 로깅 설정
+wandb:
+  use: false
+  project: null
+  entity: null
+  tags: []
+  notes: null
+
+# 기타 설정
+verbose: true
+save_best: true
+save_last: true

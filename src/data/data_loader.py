@@ -54,16 +54,57 @@ class DataLoader:
         """test_ratings.csv 로드"""
         path = os.path.join(self.data_dir, 'test_ratings.csv')
         return pd.read_csv(path)
-    
-    def get_image_path(self, book_id: str, size: str = 'medium') -> str:
-        """
-        책 이미지 파일 경로 반환
-        
-        Args:
-            book_id: 책 ID
-            
-        Returns:
-            str: 이미지 파일 경로
-        """
-        folder = 'images'
-        return os.path.join(self.data_dir, folder, f"{book_id}.01.THUMBZZZ.jpg")
+
+'''
+아래는 모든 데이터셋 정보입니다.
+
+books 데이터셋 정보:
+Shape: (149570, 10)
+
+Columns:
+['isbn', 'book_title', 'book_author', 'year_of_publication', 'publisher', 'img_url', 'language', 'category', 'summary', 'img_path']
+
+Sample data:
+         isbn            book_title           book_author  year_of_publication              publisher                                            img_url language       category                                            summary                           img_path
+0  0002005018          Clara Callan  Richard Bruce Wright               2001.0  HarperFlamingo Canada  http://images.amazon.com/images/P/0002005018.0...       en  ['Actresses']  In a small town in Canada, Clara Callan reluct...  images/0002005018.01.THUMBZZZ.jpg
+1  0060973129  Decision in Normandy          Carlo D'Este               1991.0        HarperPerennial  http://images.amazon.com/images/P/0060973129.0...       en  ['1940-1949']  Here, for the first time in paperback, is an o...  images/0060973129.01.THUMBZZZ.jpg
+--------------------------------------------------------------------------------
+
+users 데이터셋 정보:
+Shape: (68092, 3)
+
+Columns:
+['user_id', 'location', 'age']
+
+Sample data:
+   user_id                  location   age
+0        8  timmins, ontario, canada   NaN
+1    11400   ottawa, ontario, canada  49.0
+--------------------------------------------------------------------------------
+
+train_ratings 데이터셋 정보:
+Shape: (306795, 3)
+
+Columns:
+['user_id', 'isbn', 'rating']
+
+Sample data:
+   user_id        isbn  rating
+0        8  0002005018       4
+1    67544  0002005018       7
+--------------------------------------------------------------------------------
+
+test_ratings 데이터셋 정보:
+Shape: (76699, 3)
+
+Columns:
+['user_id', 'isbn', 'rating']
+
+Sample data:
+   user_id        isbn  rating
+0    11676  0002005018       0
+1   116866  0002005018       0
+--------------------------------------------------------------------------------
+
+샘플 이미지 경로: ../../data/images/0002005018.01.THUMBZZZ.jpg
+'''

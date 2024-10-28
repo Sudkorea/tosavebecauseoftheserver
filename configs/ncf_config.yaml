@@ -1,0 +1,57 @@
+# 기본 설정
+seed: 42
+device: cuda
+model: NCF
+predict: false
+
+# 데이터 관련 설정
+dataset:
+  data_path: "../../data/"
+  valid_ratio: 0.2
+
+# 데이터 로더 설정
+dataloader:
+  batch_size: 1024
+  num_workers: 4
+  shuffle: true
+
+# 모델 관련 설정
+model_args:
+  NCF:
+    embed_dim: 64  # 임베딩 차원
+    mlp_dims: [128, 64, 32]  # MLP 레이어 구조
+    dropout: 0.2
+    batchnorm: true
+
+# 학습 관련 설정
+train:
+  epochs: 100
+  early_stopping: 10
+  save_dir: "../models/"
+  resume: false
+  resume_path: null
+
+# 최적화 관련 설정
+optimizer:
+  type: Adam
+  args:
+    lr: 0.001
+    weight_decay: 0.00001
+
+# 학습률 스케줄러 설정
+lr_scheduler:
+  use: true
+  type: ReduceLROnPlateau
+  args:
+    mode: min
+    factor: 0.5
+    patience: 5
+    min_lr: 0.00001
+
+# 손실 함수
+loss: MSELoss
+
+# 평가 지표
+metrics:
+  - rmse
+  - mae

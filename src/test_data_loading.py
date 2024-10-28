@@ -20,8 +20,7 @@ def main():
             
         # 이미지 경로 테스트
         if 'books' in data:
-            sample_book_id = data['books'].iloc[0]['isbn']
-            image_path = data_loader.get_image_path(sample_book_id)
+            image_path = data['books'].iloc[0]['img_path']
             print(f"\n샘플 이미지 경로: {image_path}")
             
     except Exception as e:
