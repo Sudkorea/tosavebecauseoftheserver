@@ -12,6 +12,9 @@ class CustomModel(nn.Module):
         self.layer1 = nn.Linear(input_dim, 128)
         self.layer2 = nn.Linear(128, output_dim)
 
+        ## 여기 파라미터 128 이거 yaml으로 조정하도록 코드 변경
+        ## + cuda 사용해서 gpu 사용하도록 코드 변경
+
     def forward(self, x):
         """
         순전파 정의

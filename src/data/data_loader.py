@@ -61,10 +61,9 @@ class DataLoader:
         
         Args:
             book_id: 책 ID
-            size: 이미지 크기 ('original' 또는 'medium')
             
         Returns:
             str: 이미지 파일 경로
         """
         folder = 'images'
-        return os.path.join(self.data_dir, folder, f"{book_id}.jpg")
+        return os.path.join(self.data_dir, folder, f"{book_id}.01.THUMBZZZ.jpg")
