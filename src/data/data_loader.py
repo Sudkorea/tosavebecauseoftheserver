@@ -28,48 +28,43 @@ class DataLoader:
             Dict[str, pd.DataFrame]: 데이터프레임을 포함하는 딕셔너리
         """
         data = {
-            'train': self.load_train(),
-            'test': self.load_test(),
-            'interest': self.load_interest(),
-            'park': self.load_park(),
-            'school': self.load_school(),
-            'subway': self.load_subway()
+            'books': self.load_books(),
+            'users': self.load_users(),
+            'train_ratings': self.load_train_ratings(),
+            'test_ratings': self.load_test_ratings()
         }
         return data
     
-    def load_train(self) -> pd.DataFrame:
-        """train.csv 로드"""
-        path = os.path.join(self.data_dir, 'train.csv')
+    def load_books(self) -> pd.DataFrame:
+        """books.csv 로드"""
+        path = os.path.join(self.data_dir, 'books.csv')
         return pd.read_csv(path)
     
-    def load_test(self) -> pd.DataFrame:
-        """test.csv 로드"""
-        path = os.path.join(self.data_dir, 'test.csv')
+    def load_users(self) -> pd.DataFrame:
+        """users.csv 로드"""
+        path = os.path.join(self.data_dir, 'users.csv')
         return pd.read_csv(path)
     
-    def load_interest(self) -> pd.DataFrame:
-        """interestRate.csv 로드"""
-        path = os.path.join(self.data_dir, 'interestRate.csv')
+    def load_train_ratings(self) -> pd.DataFrame:
+        """train_ratings.csv 로드"""
+        path = os.path.join(self.data_dir, 'train_ratings.csv')
         return pd.read_csv(path)
     
-    def load_park(self) -> pd.DataFrame:
-        """parkInfo.csv 로드"""
-        path = os.path.join(self.data_dir, 'parkInfo.csv')
+    def load_test_ratings(self) -> pd.DataFrame:
+        """test_ratings.csv 로드"""
+        path = os.path.join(self.data_dir, 'test_ratings.csv')
         return pd.read_csv(path)
     
-    def load_school(self) -> pd.DataFrame:
-        """schoolinfo.csv 로드"""
-        path = os.path.join(self.data_dir, 'schoolinfo.csv')
-        return pd.read_csv(path)
-    
-    def load_subway(self) -> pd.DataFrame:
-        """subwayInfo.csv 로드"""
-        path = os.path.join(self.data_dir, 'subwayInfo.csv')
-        return pd.read_csv(path)
-    
-    def load_submission(self) -> Optional[pd.DataFrame]:
-        """sample_submission.csv 로드"""
-        path = os.path.join(self.data_dir, 'sample_submission.csv')
-        if os.path.exists(path):
-            return pd.read_csv(path)
-        return None
+    def get_image_path(self, book_id: str, size: str = 'medium') -> str:
+        """
+        책 이미지 파일 경로 반환
+        
+        Args:
+            book_id: 책 ID
+            size: 이미지 크기 ('original' 또는 'medium')
+            
+        Returns:
+            str: 이미지 파일 경로
+        """
+        folder = 'images'
+        return os.path.join(self.data_dir, folder, f"{book_id}.jpg")
