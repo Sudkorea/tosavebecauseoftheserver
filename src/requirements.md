@@ -37,15 +37,20 @@
 
 ## 실행 스크립트 (Main Scripts)
 
-- **train.py**: 모델 학습을 위한 메인 스크립트
+- **main.py**: 모델 학습 및 추론을 위한 통합 스크립트
+  - 명령행 인자를 통한 모드 설정 (학습/추론)
+  - 설정 파일(config.yaml)과 명령행 인자를 통한 하이퍼파라미터 관리
   - 데이터 로드 및 전처리
-  - 특징 추출
-  - 모델 학습 및 저장
+  - 모델 학습/추론 실행
   
-- **inference.py**: 예측을 위한 메인 스크립트
-  - 학습된 모델 로드
-  - test 데이터에 대한 예측 수행
-  - output.csv 생성
+사용 예시:
+```bash
+# 학습 모드
+python main.py --config configs/ncf_config.yaml --model NCF --predict False
+
+# 추론 모드
+python main.py --config configs/ncf_config.yaml --model NCF --predict True --checkpoint models/NCF_best.pth
+```
 
 ## 유틸리티 (Utils)
 
