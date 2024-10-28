@@ -1,2 +1,1 @@
-# 빈 파일로 두어도 됩니다
-
+from .simple_processor import SimpleProcessor

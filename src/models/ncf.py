@@ -1,7 +1,8 @@
 import torch
 import torch.nn as nn
+from ._trainer import Trainer
 
-class NCF(nn.Module):
+class NeuralCollaborativeFiltering(nn.Module):
     def __init__(self, args, data):
         """
         Neural Collaborative Filtering 모델
@@ -91,3 +92,58 @@ class NCF(nn.Module):
         x = self.fc(x).squeeze(1)
         
         return x
+
+    def fit(self, train_loader, valid_loader, config):
+        """
+        모델 학습을 수행합니다.
+        Args:
+            train_loader: 학습 데이터 로더
+            valid_loader: 검증 데이터 로더
+            config: 학습 설정
+        Returns:
+            best_loss: 최적의 검증 손실값
+        """
+        # 손실 함수 설정
+        criterion = getattr(nn, config.loss)()
+        
+        # 옵티마이저 설정
+        optimizer = getattr(torch.optim, config.optimizer.type)(
+            self.parameters(),
+            **config.optimizer.args
+        )
+        
+        # 스케줄러 설정
+        scheduler = None
+        if config.lr_scheduler.use:
+            scheduler = getattr(torch.optim.lr_scheduler, config.lr_scheduler.type)(
+                optimizer,
+                **config.lr_scheduler.args
+            )
+        
+        # 트레이너 초기화 및 학습 수행
+        trainer = Trainer(
+            model=self,
+            criterion=criterion,
+            optimizer=optimizer,
+            scheduler=scheduler,
+            device=config.device
+        )
+        
+        return trainer.train(train_loader, valid_loader, config)
+    
+    def predict(self, test_loader, config):
+        """
+        테스트 데이터에 대한 예측을 수행합니다.
+        Args:
+            test_loader: 테스트 데이터 로더
+            config: 설정
+        Returns:
+            predictions: 예측값 배열
+        """
+        trainer = Trainer(
+            model=self,
+            criterion=None,
+            optimizer=None,
+            device=config.device
+        )
+        return trainer.predict(test_loader)

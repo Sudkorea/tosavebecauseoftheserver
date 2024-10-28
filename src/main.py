@@ -3,20 +3,20 @@ import ast
 from omegaconf import OmegaConf
 import pandas as pd
 import torch
-import torch.nn as nn
-import torch.optim as optim
 from pathlib import Path
-from tqdm import tqdm
 import wandb
+import os
 
 from data.data_loader import DataLoader
-from processors.simple_processor import SimpleProcessor
-from models.ncf import NCF
-
+import models as model_module
+from processors import SimpleProcessor
 def main(args):
     # 설정 로드
     if args.config:
-        config = OmegaConf.load(args.config)
+        # config 파일 경로 수정
+        config_path = os.path.join('../configs', 
+                                 os.path.basename(args.config))
+        config = OmegaConf.load(config_path)
         # 명령행 인자로 config 덮어쓰기
         for key, value in vars(args).items():
             if value is not None:
@@ -32,50 +32,32 @@ def main(args):
     # 전처리
     print("Preprocessing data...")
     processor = SimpleProcessor()
-    processed_data = processor.fit_transform(data)
+    processor.fit(data)
+    processed_data = processor.transform(data)
     
     # 모델 초기화
     print(f"Initializing {config.model} model...")
-    model = NCF(config.model_args[config.model], processed_data).to(config.device)
+    model = model_module.NCF(config.model_args[config.model], processed_data).to(config.device)
     
     # 체크포인트에서 모델 로드
     if args.checkpoint:
         print(f"Loading checkpoint from {args.checkpoint}")
-        model.load_state_dict(torch.load(args.checkpoint))
+        checkpoint = torch.load(args.checkpoint)
+        model.load_state_dict(checkpoint['model_state_dict'])
     
     # 학습 모드
     if not args.predict:
         print("Starting training...")
-        criterion = getattr(nn, config.loss)()
-        optimizer = getattr(optim, config.optimizer.type)(
-            model.parameters(),
-            **config.optimizer.args
-        )
-        
-        scheduler = None
-        if config.lr_scheduler.use:
-            scheduler = getattr(optim.lr_scheduler, config.lr_scheduler.type)(
-                optimizer,
-                **config.lr_scheduler.args
-            )
-        
-        trainer = Trainer(
-            model=model,
-            criterion=criterion,
-            optimizer=optimizer,
-            scheduler=scheduler,
-            device=config.device
-        )
-        
-        trainer.train(
+        best_loss = model.fit(
             train_loader=processed_data['train_loader'],
             valid_loader=processed_data['valid_loader'],
             config=config
         )
+        print(f"Training completed with best validation loss: {best_loss:.4f}")
     
     # 추론 모드
     print("Generating predictions...")
-    predictions = trainer.predict(processed_data['test_loader'])
+    predictions = model.predict(processed_data['test_loader'], config)
     
     # 결과 저장
     print("Saving predictions...")
